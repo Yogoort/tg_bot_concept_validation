@@ -3,47 +3,282 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Go-Kart Race</title>
+    <title>Михалич</title>
     <style>
         body, html {
             margin: 0;
             padding: 0;
             overflow: hidden;
-            font-family: Arial, sans-serif;
+            font-family: Tahoma, Verdana, sans-serif;
         }
         canvas {
             display: block;
         }
-        #game-over {
+
+        #welcome-screen {
+            background-image: url('png/BG_1.png');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        /* Изменения в CSS */
+        .welcome-content {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            justify-content: flex-start;  /* Изменено для прижатия к верху */
+            padding-top: 1%;  /* Отступ сверху 5% */
+            padding-bottom: 1%;  /* Отступ снизу 5% */
+        }
+
+        .logo-txt {
+            max-width: 75%;
+            height: auto;
+            margin-top: auto;  /* Отступ снизу 10%      : 10 %;*/
+        }
+
+        .sec60-logo {
+            max-width: 60%;
+            height: auto;
+            margin-top: auto;
+        }
+
+        #play-button {
+            background: url('png/BTTN-Blue.png') no-repeat center center;
+            background-size: contain;
+            border: none;
+            width: 200vw;  /* Изменено на процент от ширины экрана */
+            max-width: 250px;
+            height: auto;
+            aspect-ratio: 3 / 1;  /* Поддержка пропорций кнопки */
+            cursor: pointer;
+            color: transparent;
+            margin-top: auto;  /* Отступ сверху автоматический для прижатия к низу */
+        }
+
+        .tutorial-popup {
+            background-color: rgba(106, 200, 140, 0.75);
+            border-radius: 30px;
+            padding: 10px;
+            text-align: center;
+            width: 85%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 3px solid white;
+            color: white; /* Цвет текста */
+            font-size: 30px; /* Размер шрифта 30 пикселей */
+            font-weight: bold; /* Полужирное начертание */
+            text-shadow: 2px 2px 2px rgba(52, 94, 93, 0.8); /* Тень текста */
+            -webkit-text-stroke: 2px #345e5d; /* Обводка текста */
+            text-stroke: 2px #345e5d; /* Для поддержки других браузеров */
             position: absolute;
-            top: 50%;
+            top: 40%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 20px;
+        }
+        .tutorial-popup h2 {
+            margin: 5px 0;
+
+        }
+        .tutorial-popup p {
+            font-size: 35px; /* Размер шрифта 30 пикселей */
+            margin: 10px 0;
+
+        }
+
+
+        #game-over {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: url('png/BG_win.png');
+            background-size: cover;
+            background-position: center;
+            z-index: 1000; /* Убедитесь, что элемент отображается поверх всех других элементов */
+        }
+
+        .content-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 600px;
+            height: auto;
+            max-height: 90%;
+            overflow-y: auto; /* Добавлено для предотвращения выхода за пределы */
+        }
+
+        .popup {
+            background-color: rgba(106, 200, 140, 0.75);
+            border-radius: 30px;
+            padding: 10px;
             text-align: center;
-            display: none;
-            background-color: beige;
-            background-image: url('winwin.jpg');
-            border-radius: 15px;
-            padding: 20px;
-            z-index: 1000;
-            opacity: 0;
-            transition: opacity 0.5s ease;
+            width: 70%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 3px solid white;
+            margin-bottom: 20px; /* Отступ снизу */
+            max-height: 90vh; /* Ограничиваем высоту popup */
+            color: white; /* Цвет текста */
+            font-weight: bold; /* Полужирное начертание */
+            text-shadow: 2px 2px 2px rgba(52, 94, 93, 1.0); /* Тень текста */
+            -webkit-text-stroke: 1px #345e5d; /* Обводка текста */
+           text-stroke: 1px #345e5d; /* Для поддержки других браузеров */
+
         }
-        #game-over button {
-            padding: 10px 20px;
-            font-size: 20px;
-            margin-top: 20px;
+
+        .result h2 {
+            margin: 5px 0;
+
         }
+
+        .result p {
+            font-size: 45px; /* Размер шрифта 30 пикселей */
+            margin: 10px 0;
+
+        }
+
+        .separator {
+            width: 75%;
+            height: 3px;
+            background-color: white;
+            margin: 0px 0; /* Отступы сверху и снизу для белой линии */
+            text-shadow: 3px 3px 3px rgba(52, 94, 93, 1.0); /* Тень текста */
+        }
+
+        .interview-info p {
+            font-size: 23px; /* Размер шрифта 25 пикселей */
+            margin: 10px 0 0 25px;
+            -webkit-text-stroke: 1px #345e5d; /* Обводка текста */
+           text-stroke: 1px #345e5d; /* Для поддержки других браузеров */
+        }
+
+        .video-preview img {
+            max-width: 100%;
+            height: auto;
+
+        }
+        .youtube-button {
+            width: calc(125% + 40px); /* Increase width by 40px */
+            position: relative; /* Add this line */
+            margin: 0px 0 0 0px;
+        }
+
+
+
+        .support-section {
+            text-align: center;
+            margin: 20px; /* Отступ сверху */
+            color: white; /* Цвет текста */
+            font-size: 25px; /* Размер шрифта 30 пикселей */
+            font-weight: bold; /* Полужирное начертание */
+            text-shadow: 3px 3px 3px rgba(52, 94, 93, 1.0); /* Тень текста */
+        }
+
+        .support-text {
+            margin-bottom: 10px;
+        }
+
+        .support-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .support-buttons img {
+            width: 100%;
+            height: auto;
+            max-width: 205%;
+            height: auto;
+        }
+
+        /* Медиа-запросы для адаптивности */
+        @media (max-width: 800px) {
+            .content-wrapper {
+                justify-content: flex-start;
+                padding-top: 20px;
+            }
+            .popup {
+                max-height: 60vh;
+                padding: 15px;
+            }
+
+            .result p {
+                font-size: 1.5em;
+            }
+
+            .youtube-button img {
+                max-width: 100%;
+            }
+
+            .support-buttons img {
+                max-width: 80%;
+            }
+        }
+
 
     </style>
 </head>
 <body>
-    <canvas id="gameCanvas"></canvas>
-    <div id="game-over">
-        <p>Ти протримався <span id="time"></span> секунд. <br> Тепер ти можеш подивитися повне інтерв'ю з нашими героями.</p>
-        <button onclick="watchVideo()">Дивитися</button>
+  <audio id="audio-loop-2" src="audio/loop_2.mp3" preload="auto" loop></audio>
+    <div id="welcome-screen" class="fullscreen">
+      <div class="welcome-content">
+        <img src="png/LOGO_txt.png" alt="Чорний Лебідь" class="logo-txt">
+        <img src="png/60sec-logo.png" alt="Доїхати за 60 секунд" class="sec60-logo">
+        <button id="play-button">Зіграти</button>
+      </div>
     </div>
+    <canvas id="gameCanvas"></canvas>
+    <div id="game-over" class="fullscreen">
+        <div class="content-wrapper">
+            <div class="popup">
+                <div class="result">
+                    <h2>ТВІЙ РЕЗУЛЬТАТ:</h2>
+                    <h2><span id="time"></span> СЕК.</h2>
+                </div>
+                <div class="separator"></div> <!-- Белая линия -->
+                <div class="interview-info">
+                    <p>Дивись інтерв'ю з Героями, що здійснили десятки надскладних бойових виїздів.</p>
+                </div>
+                <div class="video-preview">
+                    <img src="png/Screen-from-movie.png" alt="Video preview">
+                </div>
+                <a href="https://youtu.be/K_G31f1RUc" class="youtube-button">
+                    <img src="png/youtube_btn.png" alt="Watch on YouTube">
+                </a>
+            </div>
+            <div class="support-section">
+                <div class="support-text">
+                    <p>ПІДТРИМАТИ ПІДРОЗДІЛ "ЧОРНИЙ ЛЕБІДЬ":</p>
+                </div>
+                <div class="support-buttons">
+                    <a href="https://send.monobank.ua/jar/61f6zuuMNc">
+                        <img src="png/mono.png" alt="Monobank">
+                    </a>
+                    <a href="https://www.privat24.ua/send/cb9nx">
+                        <img src="png/privat.png" alt="Privat24">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
     <script>
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
@@ -76,7 +311,7 @@
     let carLane = 1; // 0 - left, 1 - center, 2 - right
     let targetX; // целевая позиция по X для плавного перемещения
     const lanes = 3;
-    const carSpeed = 20; // скорость перемещения машинки
+    const carSpeed = 15; // скорость перемещения машинки
 
     let obstacles = [];
     const obstacleWidth = 100;
@@ -93,27 +328,7 @@ const obstacleHitboxHeight = obstacleHeight * 0.6; // 60% от высоты из
     const timerLimit = 60; //
     let startTime, elapsedTime, distanceTravelled;
 
-    const roadImage = new Image();
-    roadImage.src = 'road.jpg'; // замените на ваше изображение
-
-    const cursorImage = new Image();
-    cursorImage.src = 'cursor.png';
-
-    const carImage = new Image();
-    carImage.src = 'car.png'; // замените на ваше изображение
-
-    const obstacleImage = new Image();
-    obstacleImage.src = 'tree.png'; // замените на ваше изображение
-
-    let explosionImage = new Image();
-    explosionImage.src = 'boom.png'; // замените на ваше изображение
     let explosionFrames = 25; // количество кадров в секвенции (по ширине и высоте)
-
-    const logoImage = new Image();
-    logoImage.src = 'logo.png'; // замените на ваше изображение
-
-    const timerIconImage = new Image();
-    timerIconImage.src = 'timer.png'; // замените на ваше изображение
 
     let roadOffset = 0;
     let shakeOffsetX = 0;
@@ -134,24 +349,131 @@ const obstacleHitboxHeight = obstacleHeight * 0.6; // 60% от высоты из
     // Параметры для текста таймера и расстояния
     const hudFontSize = 30;
     const hudFontFamily = 'Arial, sans-serif';
-    let countdownTime = 60; // Таймер на 1 минуту
+    let countdownTime = 60; // Таймер на 1 минуту ==================================================================
 
     let overlayColor = 'black';
     let overlayAlpha = 0.5;
+    let showTutorial = false;
 
-    const leftButtonImage = new Image();
-    leftButtonImage.src = 'bttn.png';
-    const rightButtonImage = new Image();
-    rightButtonImage.src = 'bttn.png';
+    const audioLoop1 = document.getElementById('audio-loop-1');
+    const audioLoop2 = document.getElementById('audio-loop-2');
+
+    const images = {
+  // Існуючі зображення
+  background: { src: 'png/BG_1.png' },
+  car: { src: 'png/car.png' },
+  road: { src: 'png/road.jpg' },
+  cursor:{ src: 'png/cursor.png' },
+  obstacle:{ src: 'png/tree.png' },
+  explosion:{ src: 'png/boom.png' },
+  logo:{ src: 'png/logo.png' },
+  timerIcon:{ src: 'png/timer.png' },
+  leftButton:{ src: 'png/bttn.png' },
+  rightButton:{ src: 'png/bttn.png' },
+
+  // Зображення для екрану привітання
+  welcome_bg: { src: 'png/BG_1.png' },
+  logo_txt: { src: 'png/LOGO_txt.png' },
+  sec60_logo: { src: 'png/60sec-logo.png' },
+  play_button: { src: 'png/BTTN-Blue.png' },
+  game_over_bg: { src: 'png/BG_win.png' },
+    screen_from_movie: { src: 'png/Screen-from-movie.png' },
+    youtube_btn: { src: 'png/youtube_btn.png' },
+    mono_btn: { src: 'png/mono.png' },
+    privat_btn: { src: 'png/privat.png' }
+};
+
+
+function loadImages(callback) {
+let loadedImages = 0;
+const totalImages = Object.keys(images).length;
+
+for (let key in images) {
+  const img = new Image();
+  img.onload = () => {
+      loadedImages++;
+      if (loadedImages === totalImages) {
+          callback();
+      }
+  };
+  img.src = images[key].src;
+  images[key].element = img;
+}
+}
+    // Вызовем функцию resizeElements при загрузке страницы
+    document.addEventListener('DOMContentLoaded', resizeElements);
+
+    document.addEventListener('DOMContentLoaded', () => {
+    const welcomeScreen = document.getElementById('welcome-screen');
+    const playButton = document.getElementById('play-button');
+    const youtubeButton = document.querySelector('.youtube-button');
+    const supportButton = document.querySelector('.support-buttons');
+
+
+    document.getElementById('game-over').style.display = 'none';
+    document.getElementById('game-over').style.opacity = '0';
+
+    loadImages(() => {
+      // Воспроизведение аудио loop_1 после загрузки изображений
+        //audioLoop1.play();
+      // Встановлюємо фонове зображення після завантаження
+      welcomeScreen.style.backgroundImage = `url(${images.welcome_bg.src})`;
+
+      // Показуємо екран привітання
+      welcomeScreen.style.display = 'flex';
+      //  tutorial.style.display = 'none';
+
+      // Добавляем обработчик клика для кнопки YouTube
+        youtubeButton.addEventListener('click', () => {
+            audioLoop2.pause();
+        });
+        supportButton.addEventListener('click', () => {
+            audioLoop2.pause();
+        });
+
+
+
+      playButton.addEventListener('click', () => {
+        // Остановить loop_1 и начать воспроизведение loop_2
+        //audioLoop1.pause();
+        audioLoop2.play();
+        welcomeScreen.style.display = 'none';
+        //tutorial.style.display = 'block';
+        canvas.style.display = 'block';
+        // Викликаємо функцію прорисовки туторіалу
+        showTutorial = true;
+      drawTutorial();
+      initCursorPosition();
+      cursorAnimationPhase = 0;
+      cursorAnimationProgress = 0;
+      startAnimating(60);
+      });
+
+
+    });
+})
+
+
+    function updateLoadingProgress(progress) {
+    ctx.clearRect(0, 0, width, height);
+    ctx.fillStyle = 'black';
+    ctx.fillRect(0, 0, width, height);
+    ctx.fillStyle = 'white';
+    ctx.font = '24px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText(`Loading... ${Math.round(progress * 100)}%`, width / 2, height / 2);
+}
 
     function drawControlButtons() {
     const buttonSize = 80;
     const margin = 20;
 
     // Left button
+    const leftButtonImage = images.leftButton.element;
     ctx.drawImage(leftButtonImage, margin, height - buttonSize - margin, buttonSize, buttonSize);
 
     // Right button (flipped horizontally)
+    const rightButtonImage = images.rightButton.element;
     ctx.save();
     ctx.scale(-1, 1);
     ctx.drawImage(rightButtonImage, -width + margin, height - buttonSize - margin, buttonSize, buttonSize);
@@ -202,7 +524,34 @@ function handleButtonClick(e) {
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
 
+    window.addEventListener('resize', resizeElements);
+
+    function resizeElements() {
+        const welcomeScreen = document.getElementById('welcome-screen');
+        const playButton = document.getElementById('play-button');
+        const logoTxt = document.querySelector('.logo-txt');
+        const sec60Logo = document.querySelector('.sec60-logo');
+
+        // Пример динамического изменения размеров (если нужно)
+        // Здесь можно добавить логику для динамического изменения размеров элементов
+
+        // Пример: Установка размеров кнопки относительно размеров экрана
+        playButton.style.width = Math.min(window.innerWidth * 1.0, 250) + 'px';
+        playButton.style.height = playButton.offsetWidth / 3 + 'px';  // поддержка пропорций кнопки
+
+        // Установка отступов
+        logoTxt.style.marginTop = window.innerHeight * 0.02 + 'px';
+        sec60Logo.style.marginTop = window.innerHeight * 0.02 + 'px';
+        playButton.style.marginBottom = window.innerHeight * 0.05 + 'px';
+    }
+
+
+
+
+
+
     function drawRoad() {
+    const roadImage = images.road.element; // Получаем изображение из объекта images
     const pattern = ctx.createPattern(roadImage, 'repeat');
     ctx.fillStyle = pattern;
     ctx.save();
@@ -224,6 +573,7 @@ function handleButtonClick(e) {
 
     //функцию для инициализации позиции курсора
     function initCursorPosition() {
+
     const laneWidth = width / lanes;
     cursorStartX = laneWidth / 2;
     cursorStartY = height * 0.75; // Изменено, чтобы курсор был ниже окна с инструкцией
@@ -233,6 +583,7 @@ function handleButtonClick(e) {
 }
 
 function animateCursor() {
+  const cursorImage = images.cursor.element;
     if (gameStarted) return;
 
     cursorAnimationProgress++;
@@ -306,24 +657,37 @@ function animateCursor() {
 }
 
 
-let showTutorial = true;
+
 
 function drawTutorial() {
     if (!showTutorial) return;
+    // Проверка, существует ли уже окно туториала
+   if (document.querySelector('.tutorial-popup')) return;
 
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-    ctx.fillRect(0, 0, width, height / 2);
+    const tutorialPopup = document.createElement('div');
+    tutorialPopup.className = 'tutorial-popup';
+    tutorialPopup.innerHTML = `
+        <h2>Виконай рятувальну місію!</h2>
+        <div class="separator"></div> <!-- Белая линия -->
+        <p>Оминай перешкоди тиснучи на стрілки.</p>
+        <p>В тебе <b>${countdownTime} </b> секунд.</p>
+        <div class="separator"></div> <!-- Белая линия -->
+        <h2>Успіху!</h2>
+    `;
 
-    ctx.fillStyle = 'white';
-    ctx.font = '24px Arial';
-    ctx.textAlign = 'center';
-    ctx.fillText('Use arrow keys, touch the screen, or', width / 2, height / 4 - 30);
-    ctx.fillText('click the buttons to move the car.', width / 2, height / 4 + 10);
-    ctx.fillText('Avoid obstacles and survive for 60 seconds!', width / 2, height / 4 + 50);
+    document.body.appendChild(tutorialPopup);
+
+    // Удаление туториала по клику на экран
+    canvas.addEventListener('click', () => {
+        showTutorial = false;
+        tutorialPopup.remove();
+        startGameplay();
+    });
 }
 
 
 function drawCar() {
+const carImage = images.car.element;
 const targetX = (width / lanes) * carLane + (width / lanes - carWidth) / 2;
 carX += (targetX - carX) * 0.2; // Увеличим скорость перемещения
 
@@ -339,6 +703,7 @@ ctx.drawImage(carImage, carX + shakeOffsetX, carY + shakeOffsetY, carWidth, carH
     }
 
     function drawObstacles() {
+      const obstacleImage = images.obstacle.element;
     for (const obstacle of obstacles) {
         ctx.save();
         ctx.translate(obstacle.x + obstacleWidth / 2 + shakeOffsetX, obstacle.y + obstacleHeight / 2 + shakeOffsetY);
@@ -361,6 +726,7 @@ ctx.drawImage(carImage, carX + shakeOffsetX, carY + shakeOffsetY, carWidth, carH
     }
 
     function drawExplosions() {
+    const explosionImage = images.explosion.element;
     const frames = explosionFrames;
     const frameCols = Math.sqrt(frames);
     const frameWidth = explosionImage.width / frameCols;
@@ -448,10 +814,12 @@ function drawHUD() {
     ctx.fillStyle = '#ffffff';
 
     // Рисуем логотип
+    const logoImage = images.logo.element;
     ctx.drawImage(logoImage, 10, 10, 100, 100);
 
     // Рисуем таймер только если игра началась
     if (gameStarted) {
+        const timerIconImage = images.timerIcon.element;
         const minutes = Math.floor(countdownTime / 60);
         const seconds = countdownTime % 60;
         const timeText = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
@@ -523,7 +891,8 @@ function drawHUD() {
     // Постепенно показываем окно с результатами
     const gameOverElement = document.getElementById('game-over');
     gameOverElement.style.opacity = endGameOpacity;
-    gameOverElement.style.display = 'block';
+    gameOverElement.style.display = 'flex'; // Обязательно flex для центрирования
+
 
     // Обновляем текст результатов
     //document.getElementById('distance').innerText = Math.floor(distanceTravelled);
@@ -562,7 +931,7 @@ function drawHUD() {
         }
         if (!gameStarted) {
             drawTutorial();
-            animateCursor();
+            //animateCursor();
         }
     }
 }
@@ -575,30 +944,26 @@ function drawHUD() {
     ctx.restore();
 }
 
+
+
+
 function startGame() {
     gameOver = false;
     endGameAnimation = false;
     gameStarted = false;
-    startTime = null; // Изменим это на null
+    startTime = null;
     elapsedTime = 0;
     distanceTravelled = 0;
     obstacles = [];
     explosions = [];
-    countdownTime = 60;
+  //  countdownTime = 60;
+
+
+/*
     document.getElementById('game-over').style.display = 'none';
     document.getElementById('game-over').style.opacity = '0';
+*/
 
-    // Инициализация позиции курсора
-    const laneWidth = width / lanes;
-    const centralLane = Math.floor(lanes / 2);
-    cursorX = (centralLane * laneWidth) + (laneWidth / 2);
-    cursorY = height - carHeight - cursorHeight - 20;
-
-    initCursorPosition();
-    cursorAnimationPhase = 0;
-    cursorAnimationProgress = 0;
-
-    startAnimating(60);
 }
 
 // обработчик событий для начала игры
@@ -617,7 +982,9 @@ function startGameplay() {
 
 
     function watchVideo() {
-    window.location.href = "https://www.youtube.com"; // Replace with your URL
+
+    audioLoop2.pause();
+    window.location.href = "https://youtu.be/K_G31f1RUc"; // Replace with your URL
     }
 
     window.addEventListener('keydown', (e) => {
@@ -653,7 +1020,8 @@ function startGameplay() {
     }
 }
 */
-    roadImage.onload = function() {
+    window.onload = function() {
+    resizeCanvas();
     startGame();
     };
 
