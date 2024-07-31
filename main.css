@@ -153,7 +153,8 @@ canvas {
 
 .interview-info p {
   font-size: 18px; /* Размер шрифта 25 пикселей */
-  padding: 0px 20px;
+  padding: 10px 10px;
+  margin: 0px;
   -webkit-text-stroke: 1px #345e5d; /* Обводка текста */
   text-stroke: 1px #345e5d; /* Для поддержки других браузеров */
 }
