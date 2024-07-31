@@ -163,6 +163,11 @@ canvas {
   max-width: 40%;
   height: auto;
 }
+
+.video-link-wrapper {
+  width: 80%;
+}
+
 .youtube-button img {
   width: 100%; /* Increase width by 40px */
   position: relative; /* Add this line */
